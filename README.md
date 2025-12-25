@@ -16,7 +16,7 @@
 <h2 id="nixos-system-management">1. NixOS System Management</h2>
 <p>These aliases streamline the management of the NixOS immutable system and its configuration files.</p>
 <ul>
-<li><strong><code>nox</code></strong>: Installs profile packages via NVS (Node Version Manager - requires experimental features: nix, flakes).</li>
+<li><strong><code>npa</code></strong>: Installs profile packages via nix profile (requires experimental features: nix-command, flakes).</li>
 <li><strong><code>enc</code></strong>: Opens <code>/etc/nixos/configuration.nix</code> with sudo privileges using the Nano editor.</li>
 <li><strong><code>rs</code></strong>: Performs a “Dry Activate” to test for errors before switching the system to the new configuration.</li>
 <li><strong><code>nu</code></strong>: Updates all Nix channels and immediately triggers a system rebuild.</li>
