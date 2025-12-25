@@ -118,9 +118,6 @@
 <ul>
 <li><code>unzip</code>, <code>unrar</code>, <code>p7zip</code>, <code>zstd</code>, <code>gnutar</code></li>
 </ul>
-<h3 id="additional">Additional</h3>
-<p>nvs: Node Version Switcher (referenced in your nox alias)<br>
-<a href="https://github.com/jeff-hykin/nix_version_search_cli">https://github.com/jeff-hykin/nix_version_search_cli</a></p>
 <h3 id="notes">Notes</h3>
 <p>Ensure path exist or change to fit your needs.</p>
 <hr>
