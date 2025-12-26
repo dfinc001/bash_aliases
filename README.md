@@ -152,7 +152,7 @@
 <pre><code>==============================================================================
 # PERMANENT ALIASES
 # ==============================================================================
-alias nox='nvs --install'
+
 alias enc='sudo nano /etc/nixos/configuration.nix'
 alias c=clear
 alias sss="sudo systemctl --all --no-pager | rg --color=auto \"not-found|inactive|dead|$\""
