@@ -172,6 +172,7 @@ npr() {
 
 
 npa() {
+    echo $(date +"%r")
     if [[ -z "$1" ]]; then
         echo "Usage: npa <search_term>"
         return 1
@@ -184,7 +185,8 @@ npa() {
     # 1. Search and process output using JSON
     # - Extracts the attribute name (the part after the last dot)
     # - tac reverses the list so the bottom results are indexed 1
-    local results=$(nix search --json nixpkgs "$1" 2>/dev/null | jq -r 'keys[]' | sed -E 's/.*\.//' | tac)
+    local results=$(nix-search --json "$1" 2>/dev/null | jq -r '.package_pname' | sed -E 's/.*\.//' | tac)
+   echo $(date +"%r")
 
     if [[ -z "$results" ]]; then
         echo -e "\033[1;31mNo packages found for: $1\033[0m"
@@ -193,6 +195,7 @@ npa() {
 
     # 2. Store in temporary DB with index
     echo "$results" | awk '{print NR "," $1}' > "$db_file"
+    echo $(date +"%r")
 
     # 3. Display list
     echo -e "\033[1;34mIndex    Package Name\033[0m"
@@ -200,6 +203,7 @@ npa() {
     while IFS=, read -r idx name; do
         printf "\033[1;32m%-8s\033[0m %s\n" "$idx" "$name"
     done < "$db_file"
+    echo $(date +"%r")
 
     # 4. User Selection
     echo -e "\n\033[1;33mEnter index number to add to profile:\033[0m"
