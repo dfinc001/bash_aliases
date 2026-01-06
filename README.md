@@ -312,6 +312,66 @@ npr() {
     rm -f "$db_file"
 }
 
+# Nix Profile Add: npa (Interactive) - requires nix-search
+npa() {
+    echo $(date +"%r")
+    if [[ -z "$1" ]]; then
+        echo "Usage: npa <search_term>"
+        return 1
+    fi
+
+    local db_file="$HOME/.nix_search.tmpdb"
+    clear
+    echo -e "\033[1;34mSearching for: $1...\033[0m"
+
+    # 1. Search and process output using JSON
+    # - Extracts the attribute name (the part after the last dot)
+    # - tac reverses the list so the bottom results are indexed 1
+    local results=$(nix-search --json "$1" 2>/dev/null | jq -r '.package_pname' | sed -E 's/.*\.//' | tac)
+   echo $(date +"%r")
+
+    if [[ -z "$results" ]]; then
+        echo -e "\033[1;31mNo packages found for: $1\033[0m"
+        return 1
+    fi
+
+    # 2. Store in temporary DB with index
+    echo "$results" | awk '{print NR "," $1}' > "$db_file"
+    echo $(date +"%r")
+
+    # 3. Display list
+    echo -e "\033[1;34mIndex    Package Name\033[0m"
+    echo -e "\033[1;30m---------------------\033[0m"
+    while IFS=, read -r idx name; do
+        printf "\033[1;32m%-8s\033[0m %s\n" "$idx" "$name"
+    done < "$db_file"
+    echo $(date +"%r")
+
+    # 4. User Selection
+    echo -e "\n\033[1;33mEnter index number to add to profile:\033[0m"
+    read -r -p "> " choice
+
+    if [[ -z "$choice" ]] || ! [[ "$choice" =~ ^[0-9]+$ ]]; then
+        [[ -f "$db_file" ]] && rm -f "$db_file"
+        return
+    fi
+
+    # 5. Map choice to Package Name
+    local target_pkg=$(grep "^${choice}," "$db_file" | cut -d',' -f2)
+
+    if [[ -z "$target_pkg" ]]; then
+        echo -e "\033[1;31mInvalid index: $choice\033[0m"
+        rm -f "$db_file"
+        return
+    fi
+
+    # 6. Execute Command
+    echo -e "\n\033[1;32mExecuting: nix profile add nixpkgs#$target_pkg\033[0m"
+    nix profile add "nixpkgs#$target_pkg"
+
+    rm -f "$db_file"
+}
+
 # Universal Extract: ex filename
 ex() {
     if [ -f "$1" ] ; then
